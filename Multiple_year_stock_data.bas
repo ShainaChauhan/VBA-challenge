@@ -1,7 +1,6 @@
 Attribute VB_Name = "Module1"
 Sub Multiple_year_stock_data()
 
-'Declare variables
 Dim ws As Worksheet
 Dim sort_range As Range
 Dim lastrow As Long 'To find last row and make table iteration dynamic
@@ -13,42 +12,39 @@ Dim sum_tbl_row As Long 'Help move to next row on summary table
 Dim start As Double 'Start ro
 Dim i As Double
 
-'to iterate from each existing worksheet
+
 For Each ws In ThisWorkbook.Worksheets
 ws.Activate
 
-'Assign variables
+
 
     start = 2
     stk_total = 0
     sum_tbl_row = 2
     lastrow = Cells(Rows.Count, "A").End(xlUp).Row
 
-' Create Summary Table
+
     Cells(1, "I").Value = "Ticker"
     Cells(1, "J").Value = "Yearly Change"
     Cells(1, "K").Value = "Percent Change"
     Cells(1, "L").Value = "Total Stock Volume"
 
 
-'Loop through all table rows
     For i = 2 To lastrow
     
-        'Assign value to ticker
+
         ticker = Cells(start, "A").Value
     
-        'Conditional - If next row ticker symbol <> previous
+
         If Cells(i + 1, "A").Value <> Cells(i, "A").Value Then
                        
-            'Assing value to variables (Yearly Change, % Change,
-            'Total Stock Volume)
+
             
             ychange = Cells(i, 6).Value - Cells(start, 3)
             Perc_chg = ychange / Cells(start, 3)
             stk_total = stk_total + Cells(i, "G").Value
             
             
-            'Add variables value to summary table
             Range("I" & sum_tbl_row).Value = ticker
             Range("J" & sum_tbl_row).Value = ychange
             Range("K" & sum_tbl_row).Value = Format(Perc_chg, "0.00%")
@@ -65,11 +61,9 @@ ws.Activate
             
             End If
 
-            'Reset stk_total
             stk_total = 0
                         
                
-            'Change position of sum_tbl_row and start to next i
             sum_tbl_row = sum_tbl_row + 1
             start = i + 1
         
@@ -80,25 +74,20 @@ ws.Activate
 
         End If
 
-'Next table iteration
     Next i
 
-'Adjust summary columns width
     Columns("I:L").AutoFit
 
-'Variables for max, min and greater total
     Dim max As Double
     Dim min As Double
     Dim max_total As Double
 
-'Assign value to variables
     lastrow = Cells(Rows.Count, "J").End(xlUp).Row 'Resets lastrow for last range
     max = 0
     min = 0
     max_total = 0
     
 
-    ' Loop through the column values
     For i = 2 To lastrow
 
         If Cells(i, "K").Value > max Then
@@ -120,7 +109,6 @@ ws.Activate
         
     Next i
 
-' Create Summary Table
     Cells(1, "O").Value = "Ticker"
     Cells(1, "P").Value = "Value"
     Cells(2, "N").Value = "Gratest % Increase"
@@ -131,14 +119,5 @@ ws.Activate
     Cells(4, "P").Value = Format(max_total, "$0.00")
 
 Columns("N:P").AutoFit
-
-'Next worksheet
 Next ws
-    
-
 End Sub
-
-
-
-
-
